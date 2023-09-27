@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MiniCrud.Products.Application.Queries
 {
-    public class GetProductsQuery : IRequest<ProductDTO>
+    public class GetProductsQuery : IRequest<IEnumerable<ProductDTO>>
     {
     }
 }

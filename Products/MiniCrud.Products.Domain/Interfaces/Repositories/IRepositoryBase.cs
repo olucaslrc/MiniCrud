@@ -1,11 +1,12 @@
 namespace MiniCrud.Products.Domain.Interfaces.Repositories
 {
-    public interface IRepositoryBase<TEntity> where TEntity : class
+    public interface IRepositoryBase<T> : IDisposable where T : class
     {
-        Task<bool> AddAsync(TEntity entity);
-        Task<TEntity> GetByIdAsync(int id);
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        Task<bool> UpdateAsync(TEntity entity);
-        Task<bool> DeleteAsync(TEntity entity);
+        Task<bool> AddAsync(IEnumerable<T> entities);
+        Task<T?> GetByIdAsync(Guid id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<bool> UpdateAsync(IEnumerable<T> entities);
+        Task<bool> DeleteAsync(IEnumerable<T> entities);
+        Task<bool> SaveAsync();
     }
 }

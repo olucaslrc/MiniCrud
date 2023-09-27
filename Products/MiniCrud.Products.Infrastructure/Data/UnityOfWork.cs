@@ -1,12 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using MiniCrud.Products.Domain.Interfaces;
+using MiniCrud.Products.Domain.Interfaces.Repositories;
+using MiniCrud.Products.Infrastructure.Data.Repositories;
 
 namespace MiniCrud.Products.Infrastructure.Data
 {
-    internal class UnityOfWork
+    public class UnityOfWork : IUnityOfWork
     {
+        private readonly MiniCrudDbContext? _context;
+
+        public UnityOfWork(MiniCrudDbContext context)
+        {
+            _context = context;
+        }
+
+        private IProductRepository? _productRepository;
+        public IProductRepository ProductRepository 
+        { 
+            get 
+            {
+                _productRepository ??= new ProductRepository(_context!);
+                return _productRepository!;
+            } 
+        }
     }
 }

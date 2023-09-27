@@ -1,18 +1,44 @@
 ﻿using MediatR;
 using MiniCrud.Products.Application.DTOs;
-using System;
-using System.Collections.Generic;
+using MiniCrud.Products.Domain.Entities;
+using MiniCrud.Products.Domain.Interfaces;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MiniCrud.Products.Application.Queries.Handlers
 {
-    public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ProductDTO>
+    public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, IEnumerable<ProductDTO>>
     {
-        public Task<ProductDTO> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+        private readonly IUnityOfWork _uow;
+
+        public GetProductsQueryHandler(IUnityOfWork uow)
         {
-            throw new NotImplementedException();
+            _uow = uow;
+        }
+
+        public async Task<IEnumerable<ProductDTO>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = new List<ProductDTO>();
+                var getProducts = await _uow.ProductRepository.GetAllAsync();
+
+                foreach (var product in getProducts)
+                {
+                    result.Add(new ProductDTO
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        Description = product.Description,
+                        Price = product.Price,
+                        Registered = product.Registered,
+                    });
+                }
+                return result;
+            }
+            catch (Exception ex)
+            { 
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
